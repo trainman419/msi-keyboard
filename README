@@ -11,6 +11,8 @@ To build:
 qmake
 make
 
+Make sure to copy 99-msi.rules to /etc/udev/rules.d unless you want to run the program as root. Requires a reboot or maybe just a reload of udev rules to work correctly.
+
 To use:
 
 Usage: ./msi-keyboard [options]
