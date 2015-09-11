@@ -183,8 +183,8 @@ Example:
     }
   }
 
-  if(!keyboardOptions.modeSet && !keyboardOptions.colorSet) {
-    std::cerr << "Please set an option to change, either the mode or color. Both can be specified, as well as multiple color options (one for each region)" << std::endl;
+  if(!keyboardOptions.modeSet || !keyboardOptions.colorSet) {
+    std::cerr << "Please set a mode as well as at least one color region to change." << std::endl;
     return 1;
   }else{
     Keyboard k;
