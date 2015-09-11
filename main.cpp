@@ -1,3 +1,12 @@
+/*
+  main.cpp
+
+  (C) Copyright 2015, Brad Parker
+  All rights reserved.
+
+  License: 3-clause BSD. See COPYING
+*/
+
 #include <QCoreApplication>
 #include "keyboard.h"
 

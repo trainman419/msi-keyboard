@@ -1,3 +1,12 @@
+/*
+  keyboard.cpp
+
+  (C) Copyright 2015, Brad Parker
+  All rights reserved.
+
+  License: 3-clause BSD. See COPYING
+*/
+
 #include "keyboard.h"
 #include <iostream>
 #include <QTimer>
@@ -20,7 +29,7 @@ Keyboard::Keyboard() :
 Keyboard::~Keyboard() {
   if(m_dev) {
     hid_close(m_dev);
-    std::cout << "closed usb device" << std::endl;
+    //std::cout << "closed usb device" << std::endl;
   }
 }
 

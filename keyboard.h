@@ -1,3 +1,12 @@
+/*
+  keyboard.h
+
+  (C) Copyright 2015, Brad Parker
+  All rights reserved.
+
+  License: 3-clause BSD. See COPYING
+*/
+
 #ifndef __KEYBOARD_H
 #define __KEYBOARD_H
 
