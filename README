@@ -10,3 +10,44 @@ To build:
 
 qmake
 make
+
+To use:
+
+Usage: ./msi-keyboard [options]
+Keyboard color changer for MSI steelseries keyboards
+
+Options:
+  -h, --help     Displays this help.
+  -v, --version  Displays version information.
+  -m, --mode     set color mode: normal, gaming, breathe, demo, wave
+  -c, --color    set a color using the format: region,color,intensity
+
+Available regions:
+
+left
+middle
+right
+
+Available colors:
+
+off
+red
+orange
+yellow
+green
+sky
+blue
+purple
+white
+
+Available intensities:
+
+high
+medium
+low
+light
+
+Example:
+
+./msi-keyboard -m normal -c left,red,high -c middle,purple,high -c right,sky,high
+
