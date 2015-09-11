@@ -12,7 +12,7 @@
 #include <QTimer>
 #include <QCoreApplication>
 
-#define BUFSIZ 8
+#define BUFSIZE 8
 
 Keyboard::Keyboard() :
   m_dev(NULL)
@@ -37,7 +37,7 @@ void Keyboard::setMode(Mode mode) {
   if(!m_dev)
     return;
 
-  unsigned char buf[BUFSIZ] = {0};
+  unsigned char buf[BUFSIZE] = {0};
 
   buf[0] = 1;
   buf[1] = 2;
@@ -48,14 +48,14 @@ void Keyboard::setMode(Mode mode) {
   buf[6] = 0;
   buf[7] = 236;
 
-  hid_send_feature_report(m_dev, buf, BUFSIZ);
+  hid_send_feature_report(m_dev, buf, BUFSIZE);
 }
 
 void Keyboard::setColor(Region region, Color color, Intensity intensity) {
   if(!m_dev)
     return;
 
-  unsigned char buf[BUFSIZ] = {0};
+  unsigned char buf[BUFSIZE] = {0};
 
   buf[0] = 1;
   buf[1] = 2;
@@ -66,6 +66,6 @@ void Keyboard::setColor(Region region, Color color, Intensity intensity) {
   buf[6] = 0;
   buf[7] = 236;
 
-  hid_send_feature_report(m_dev, buf, BUFSIZ);
+  hid_send_feature_report(m_dev, buf, BUFSIZE);
 }
 
