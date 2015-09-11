@@ -9,4 +9,6 @@ QT -= gui
 SOURCES += main.cpp keyboard.cpp
 HEADERS += keyboard.h
 
+QMAKE_CXXFLAGS += -std=c++11
+
 unix:LIBS += -lhidapi-libusb
