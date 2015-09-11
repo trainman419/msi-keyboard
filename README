@@ -1,0 +1,11 @@
+This program can change the colors on your MSI steelseries keyboard. The keyboards have 3 regions that can have different colors for each one.
+
+Prerequisites (tested on Ubuntu 14.04 only):
+
+Qt 5
+libhidapi-libusb0
+
+To build:
+
+qmake
+make
