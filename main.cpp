@@ -20,13 +20,87 @@ enum CommandLineParseResult
   CommandLineHelpRequested
 };
 
+struct ColorOption {
+  ColorOption() :
+  region(REGION_LEFT)
+  ,color(COLOR_RED)
+  ,intensity(INTENSITY_HIGH)
+  {}
 
-CommandLineParseResult parseCommandLine(QCommandLineParser &parser, QString *errorMessage) {
+  Region region;
+  Color color;
+  Intensity intensity;
+};
+
+struct KeyboardOptions {
+  KeyboardOptions() :
+  modeOption(MODE_NORMAL)
+  ,colorOptions()
+  ,modeSet(false)
+  ,colorSet(false)
+  {}
+
+  Mode modeOption;
+  QList<ColorOption*> colorOptions;
+  bool modeSet;
+  bool colorSet;
+
+  void setMode(QString mode) {
+    if(mode == "normal") { modeOption = MODE_NORMAL; }
+    if(mode == "gaming") { modeOption = MODE_GAMING; }
+    if(mode == "breathe") { modeOption = MODE_BREATHE; }
+    if(mode == "demo") { modeOption = MODE_DEMO; }
+    if(mode == "wave") { modeOption = MODE_WAVE; }
+
+    modeSet = true;
+  }
+
+  void setColor(QString colorString) {
+    QStringList fields = colorString.split(',');
+
+    if(fields.count() != 3) {
+      std::cerr << "invalid color selection" << std::endl;
+      qApp->quit();
+      return;
+    }
+
+    QString region = fields.at(0);
+    QString color = fields.at(1);
+    QString intensity = fields.at(2);
+
+    ColorOption *colorOption = new ColorOption;
+
+    if(region == "left") colorOption->region = REGION_LEFT;
+    if(region == "middle") colorOption->region = REGION_MIDDLE;
+    if(region == "right") colorOption->region = REGION_RIGHT;
+
+    if(color == "off") colorOption->color = COLOR_OFF;
+    if(color == "red") colorOption->color = COLOR_RED;
+    if(color == "orange") colorOption->color = COLOR_ORANGE;
+    if(color == "yellow") colorOption->color = COLOR_YELLOW;
+    if(color == "green") colorOption->color = COLOR_GREEN;
+    if(color == "sky") colorOption->color = COLOR_SKY;
+    if(color == "blue") colorOption->color = COLOR_BLUE;
+    if(color == "purple") colorOption->color = COLOR_PURPLE;
+    if(color == "white") colorOption->color = COLOR_WHITE;
+
+    if(intensity == "high") colorOption->intensity = INTENSITY_HIGH;
+    if(intensity == "medium") colorOption->intensity = INTENSITY_MEDIUM;
+    if(intensity == "low") colorOption->intensity = INTENSITY_LOW;
+    if(intensity == "light") colorOption->intensity = INTENSITY_LIGHT;
+
+    colorSet = true;
+
+    colorOptions.append(colorOption);
+  }
+};
+
+CommandLineParseResult parseCommandLine(QCommandLineParser &parser, KeyboardOptions *keyboardOptions, QString *errorMessage) {
   QCommandLineOption helpOption = parser.addHelpOption();
   QCommandLineOption versionOption = parser.addVersionOption();
 
-  QCommandLineOption mode(QStringList() << "m" << "mode", "set color mode: normal, gaming, breathe, demo, wave");
-  QCommandLineOption color(QStringList() << "c" << "color", "set a color using the format: region,color,intensity");
+  QCommandLineOption mode(QStringList() << "m" << "mode", "set color <mode>: normal, gaming, breathe, demo, wave", "mode");
+  QCommandLineOption color(QStringList() << "c" << "color", "set a <color> using the format: region,color,intensity", "color");
 
   parser.addOption(mode);
   parser.addOption(color);
@@ -42,6 +116,16 @@ CommandLineParseResult parseCommandLine(QCommandLineParser &parser, QString *err
   if(parser.isSet(helpOption))
     return CommandLineHelpRequested;
 
+  if(parser.isSet(mode)) {
+    keyboardOptions->setMode(parser.value(mode));
+  }
+
+  if(parser.isSet(color)) {
+    foreach(const QString &colorValue, parser.values(color)) {
+      keyboardOptions->setColor(colorValue);
+    }
+  }
+
   return CommandLineOk;
 }
 
@@ -54,8 +138,9 @@ int main(int argc, char *argv[]) {
   parser.setApplicationDescription("Keyboard color changer for MSI steelseries keyboards");
 
   QString errorMessage;
+  KeyboardOptions keyboardOptions;
 
-  switch(parseCommandLine(parser, &errorMessage)) {
+  switch(parseCommandLine(parser, &keyboardOptions, &errorMessage)) {
     case CommandLineOk:
       break;
     case CommandLineError:
@@ -98,13 +183,29 @@ Example:
     }
   }
 
-  Keyboard k;
-  k.setMode(MODE_NORMAL);
+  if(!keyboardOptions.modeSet && !keyboardOptions.colorSet) {
+    std::cerr << "Please set an option to change, either the mode or color. Both can be specified, as well as multiple color options (one for each region)" << std::endl;
+    return 1;
+  }else{
+    Keyboard k;
+
+    if(keyboardOptions.modeSet) {
+      k.setMode(keyboardOptions.modeOption);
+    }
+
+    if(keyboardOptions.colorSet) {
+      for(int i = 0; i < keyboardOptions.colorOptions.count(); ++i) {
+        ColorOption *colorOption = keyboardOptions.colorOptions.at(i);
+
+        k.setColor(colorOption->region, colorOption->color, colorOption->intensity);
+      }
+    }
+  }
+
+  /*k.setMode(MODE_NORMAL);
   k.setColor(REGION_LEFT, COLOR_RED, INTENSITY_HIGH);
   k.setColor(REGION_MIDDLE, COLOR_PURPLE, INTENSITY_HIGH);
-  k.setColor(REGION_RIGHT, COLOR_SKY, INTENSITY_HIGH);
+  k.setColor(REGION_RIGHT, COLOR_SKY, INTENSITY_HIGH);*/
 
   return 0;
-  //return app.exec();
 }
-
