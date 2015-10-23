@@ -2,13 +2,15 @@ This program can change the colors on your MSI steelseries keyboard. The keyboar
 
 Prerequisites (tested on Ubuntu 14.04 only):
 
-Qt 5.2 or later (Ubuntu includes Qt 5.2.1)
+Qt 5.2 or later (Ubuntu includes Qt 5.2.1):
+qtbase5-dev (maybe?)
+
 libhidapi-dev
 libhidapi-libusb0
 
 To build:
 
-qmake
+qtchooser -run-tool=qmake -qt=5
 make
 
 Make sure to copy 99-msi.rules to /etc/udev/rules.d unless you want to run the program as root. Requires a reboot or maybe just a reload of udev rules to work correctly.
